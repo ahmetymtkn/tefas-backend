@@ -10,6 +10,8 @@ use App\Http\Controllers\FundStatsHistoryController;
 use App\Http\Controllers\TefasComparisonHistoryController;
 use App\Http\Controllers\TefasFundDetailController;
 use App\Http\Controllers\FavoriteFundController;
+use App\Http\Controllers\TrendAnalysisController;
+use App\Http\Controllers\TefasTrendCheckingController;
 
 // ===== KİMLİK DOĞRULAMA ROTALARI (PUBLIC) =====
 // Kimlik doğrulama Token'ı olmasa da erişilebilir
@@ -21,7 +23,6 @@ Route::post('/login', [UserController::class, 'login']);
 
 // ===== KİMLİK DOĞRULAMA GEREKLİ ROTALAR (PROTECTED) =====
 // Tüm bu rotalar Sanctum API Token gereklidir (Başlıkta: Authorization: Bearer {token})
-
 Route::middleware('auth:sanctum')->group(function () {
     // Authenticated kullanıcının bilgisini getir
     Route::get('/user', function (Request $request) {
@@ -73,6 +74,16 @@ Route::middleware('auth:sanctum')->group(function () {
     // 8. Spesifik fon detayları (portfolyo dağılımı)
     // Örn: /api/tefas/fund-details/HAK?date=2026-03-28
     Route::get('/tefas/fund-details/{code}', [TefasFundDetailController::class, 'getByCodeAndDate']);
+
+    // ===== TREND ANALİZİ =====
+    
+    // 9. En son trend analiz verileri
+    // Sonuç: Fon kodu, seri gün sayısı (up/down), yüzde değişim, son fiyat
+    // Sadece en güncel tarihe sahip fonları döndürür
+    Route::get('/tefas/trend-analysis', [TrendAnalysisController::class, 'getLatestTrends']);
+
+    // 10. Son 30 günlük trend kontrol verileri (Yükseliş/Düşüş gün sayısı)
+    Route::get('/tefas/trend-checks', [TefasTrendCheckingController::class, 'getLatestTrendChecks']);
 
     // ===== FAVORİ FONLAR =====
     
