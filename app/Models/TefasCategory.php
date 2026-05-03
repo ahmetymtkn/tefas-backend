@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Fon kategorileri - Yatirım türleri (Hısse Senedi, Sabit Getirili vb)
+ * Fon kategorileri - Yatırım türleri (Hisse Senedi, Sabit Getirili vb.)
  * 
- * İlişkiler: Çok fon, verimlilik oranları
+ * İlişkiler: Fonlar, verimlilik oranları
  */
 class TefasCategory extends Model
 {

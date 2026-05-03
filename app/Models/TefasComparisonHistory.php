@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Fonların karşılaştırılma geçmişi - Bir fonun farklı dönemlerde diğer fonlarla karşılaştırılması
  * 
- * Alanlar: Fon kodu, dönem, karşılaştırma isimler (JSON), değerleri (JSON)
+ * Alanlar: Fon kodu, dönem, karşılaştırma isimleri (JSON), değerleri (JSON)
  * İlişkiler: Fon, Dönem
  */
 class TefasComparisonHistory extends Model
@@ -53,7 +53,7 @@ class TefasComparisonHistory extends Model
     /**
      * Karşılaştırma isimlerini array'e çevir (JSON decode)
      */
-    // Karşılaştırma isimler array accessorı
+    // Karşılaştırma isimleri için dizi erişimcisi (Accessor)
     public function getComparisonNamesArrayAttribute()
     {
         return $this->comparison_names ? json_decode($this->comparison_names, true) : [];
@@ -62,7 +62,7 @@ class TefasComparisonHistory extends Model
     /**
      * Karşılaştırma değerlerini array'e çevir (JSON decode)
      */
-    // Karşılaştırma değerleri array accessorı
+    // Karşılaştırma değerleri için dizi erişimcisi (Accessor)
     public function getComparisonValuesArrayAttribute()
     {
         return $this->comparison_values ? json_decode($this->comparison_values, true) : [];
@@ -71,7 +71,7 @@ class TefasComparisonHistory extends Model
     /**
      * Array'den karşılaştırma isimlerini JSON'a çevir (mutator)
      */
-    // Karşılaştırma isimlerı JSON'a çevir
+    // Karşılaştırma isimlerini JSON formatına çevir (Mutator)
     public function setComparisonNamesAttribute($value)
     {
         $this->attributes['comparison_names'] = is_array($value) ? json_encode($value) : $value;
@@ -80,7 +80,7 @@ class TefasComparisonHistory extends Model
     /**
      * Array'den karşılaştırma değerlerini JSON'a çevir (mutator)
      */
-    // Karşılaştırma değerlerini JSON'a çevir
+    // Karşılaştırma değerlerini JSON formatına çevir (Mutator)
     public function setComparisonValuesAttribute($value)
     {
         $this->attributes['comparison_values'] = is_array($value) ? json_encode($value) : $value;

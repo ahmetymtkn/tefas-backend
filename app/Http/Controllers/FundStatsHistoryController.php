@@ -11,14 +11,14 @@ class FundStatsHistoryController extends Controller
      * Verilen fon kodu için en yüksek tarihli istatistikleri getir
      * 
      * GET /api/tefas/fund-stats/{code}
-     * Veri: Son gündeki istatistikler (fiyat, getiri, yılık getiri vb)
+     * Veri: Son gündeki istatistikler (fiyat, getiri, yıllık getiri vb.)
      * @param string $code - Fon kodu
      * @return JSON - Fon istatistiği (son gün)
      */
     // Fon kodu için en son istatistikleri getir
     public function getLatestByCode($code)
     {
-        // Verilen fon kodu için en yeni tarihteı al
+        // Verilen fon kodu için en yeni tarihi al
         $latestDate = FundStatsHistory::where('code', $code)
             ->max('created_at');
 

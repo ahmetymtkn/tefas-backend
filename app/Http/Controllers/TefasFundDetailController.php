@@ -13,9 +13,9 @@ class TefasFundDetailController extends Controller
      * Tüm fonların belirli bir tarihteki detayını getir (kod, ad, kategori, fiyat)
      * 
      * GET /api/tefas/fund-details?date=2026-03-28
-     * Tarih parametreı opsiyonel: Verilmezse en son tarih kullanılır
+     * Tarih parametresi opsiyonel: Verilmezse en son tarih kullanılır
      * @param Request $request - Op. query: date (Y-m-d formatı)
-     * @return JSON - Tüm fonlar la detayları
+     * @return JSON - Tüm fonlar ve detayları
      */
     // Tüm fonların belirli bir tarihteki bilgilerini getir
     public function getAllByDate(Request $request)
@@ -63,10 +63,10 @@ class TefasFundDetailController extends Controller
      * Belirli bir fonun detayını kod ve tarih ile getir (portfolyo dağılımı dahil)
      * 
      * GET /api/tefas/fund-details/{code}?date=2026-03-28
-     * Tarih parametreı opsiyonel: Verilmezse o fonın en son verileri kullanılır
+     * Tarih parametresi opsiyonel: Verilmezse o fonun en son verileri kullanılır
      * @param string $code - Fon kodu
      * @param Request $request - Op. query: date (Y-m-d formatı)
-     * @return JSON - Fon detayları (portfolyo dışlerı v.s)
+     * @return JSON - Fon detayları (portföy dağılımı vb.)
      */
     // Belirli bir fonun detayını getir
     public function getByCodeAndDate($code, Request $request)

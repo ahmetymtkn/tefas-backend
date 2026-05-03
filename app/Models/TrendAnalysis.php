@@ -28,7 +28,7 @@ class TrendAnalysis extends Model
     public $timestamps = false;
     
     /**
-     * Relationship with TefasFund
+     * TefasFund ile ilişki
      */
     public function fund()
     {

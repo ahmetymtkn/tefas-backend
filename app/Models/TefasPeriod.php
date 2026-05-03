@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Verimlilik karsilastirma dönemleri - 1 ay, 3 ay, 6 ay, 1 yıl vb
+ * Verimlilik karşılaştırma dönemleri - 1 ay, 3 ay, 6 ay, 1 yıl vb.
  * 
  * İlişkiler: Verimlilik oranları, karşılaştırmalar
  */

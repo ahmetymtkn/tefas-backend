@@ -39,7 +39,7 @@ class TefasBestCategoryRate extends Model
     /**
      * Verimlilik oranı (getiri) üzerinden erişim için accessor
      */
-    // Getiri oranı accessorı
+    // Getiri oranı erişimcisi (Accessor)
     public function getRateAttribute()
     {
         return $this->getiri;

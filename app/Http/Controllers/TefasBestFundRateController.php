@@ -16,7 +16,7 @@ class TefasBestFundRateController extends Controller
      * @param int $periodId - Dönem ID
      * @return JSON - Top 9 fon ve bunların verimlilik verileri
      */
-    // Kategori ve dönem çın top 9 fonu getir (verimliliğe göre sıralsı)
+    // Kategori ve dönem için en iyi 9 fonu getir (verimliliğe göre sıralı)
     public function getTopByCategoryAndPeriod($categoryId, $periodId)
     {
         $latestDate = TefasBestFundRate::where('category_id', $categoryId)

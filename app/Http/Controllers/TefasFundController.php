@@ -16,9 +16,9 @@ class TefasFundController extends Controller
      */
     public function getAllFunds()
     {
-        // Sadece gerekli alanlar seç (performans için)
-        // Kategori bilgisini de yükle (with)
-        // Ünvan aırlığı küçüün yapmak için map'le ve kategorinin adını ekle
+        // Performans için sadece gerekli alanları seçiyoruz.
+        // İlişkili kategori bilgisini yüklüyoruz (Eager Loading).
+        // Veri boyutunu küçültmek ve kategori adını düz bir şekilde dönmek için map'liyoruz.
         $data = TefasFund::select('code', 'name', 'category_id')
             ->with(['category:id,name'])
             ->orderBy('code')

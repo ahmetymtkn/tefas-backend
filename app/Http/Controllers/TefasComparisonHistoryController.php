@@ -16,7 +16,7 @@ class TefasComparisonHistoryController extends Controller
      * @param int $periodId - Dönem ID
      * @return JSON - Karşılaştırma verileri (isimler ve değerler)
      */
-    // Fon ve dönem çın son karşılaştırma verilerini getir
+    // Fon ve dönem için son karşılaştırma verilerini getir
     public function getLatestByCodeAndPeriod($code, $periodId)
     {
         // Fon ve dönem için en yeni karşılaştırma verilerinin tarihini al

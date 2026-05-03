@@ -45,7 +45,7 @@ class FavoriteFundController extends Controller
         $user = $request->user();
         $fundCode = $request->input('fund_code');
 
-        // Zaten favorite'de var mı kontrol et
+        // Zaten favorilerde var mı kontrol et
         $exists = UserFavoriteFund::where('user_id', $user->id)
             ->where('fund_code', $fundCode)
             ->exists();
@@ -57,7 +57,7 @@ class FavoriteFundController extends Controller
             ], 409);
         }
 
-        // Yeni favorite kaydını oluştur
+        // Yeni favori kaydını oluştur
         $favorite = UserFavoriteFund::create([
             'user_id' => $user->id,
             'fund_code' => $fundCode,
@@ -93,7 +93,7 @@ class FavoriteFundController extends Controller
         ], 200);
     }
 
-    // Verilen fonlardan hangilerinin favorite olduğunu kontrol et
+    // Verilen fonlardan hangilerinin favorilerde olduğunu kontrol et
     public function checkFavorites(Request $request)
     {
         // Fon kodları array'ini valide et

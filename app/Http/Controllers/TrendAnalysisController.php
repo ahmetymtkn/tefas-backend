@@ -8,15 +8,15 @@ use Illuminate\Http\JsonResponse;
 class TrendAnalysisController extends Controller
 {
     /**
-     * Get latest trend analysis data for all funds
-     * Only returns data for the latest analysis date across all funds
-     * Filters out funds without the latest date analysis
+     * Tüm fonlar için en son trend analiz verilerini getirir
+     * Sadece tüm fonlar genelindeki en güncel analiz tarihine sahip verileri döndürür
+     * En güncel tarihe ait analizi olmayan fonları filtreler
      * 
      * @return JsonResponse
      */
     public function getLatestTrends(): JsonResponse
     {
-        // Get the maximum (latest) analysis date from the entire dataset
+        // Tüm veri setinden en büyük (en son) analiz tarihini al
         $latestDate = TrendAnalysis::max('analysis_date');
         
         if (!$latestDate) {
@@ -27,8 +27,8 @@ class TrendAnalysisController extends Controller
             ], 404);
         }
         
-        // Get all trends for the latest date only
-        // This automatically filters out funds that don't have analysis on the latest date
+        // Sadece en son tarihli tüm trendleri al
+        // Bu, en son tarihte analizi olmayan fonları otomatik olarak filtreler
         $trends = TrendAnalysis::where('analysis_date', $latestDate)
             ->with(['fund' => function($q) {
                 $q->select('code', 'name', 'category_id')->with(['category' => function($q2) {
@@ -39,7 +39,7 @@ class TrendAnalysisController extends Controller
             ->select('fund_code', 'up_streak', 'down_streak', 'change_percent', 'last_price')
             ->get()
             ->map(function($trend) {
-                // Determine streak direction: positive for up, negative for down
+                // Seri yönünü belirle: yükseliş için pozitif, düşüş için negatif
                 $streak = $trend->up_streak > 0 ? $trend->up_streak : -$trend->down_streak;
                 
                 return [

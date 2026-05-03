@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Türkçe yatırım fonları (TEFAS ı Bursa)
+ * Türkiye Yatırım Fonları (TEFAS)
  * 
  * Alanlar: Fon kodu, adı, kategori, isin, komisyon, varlık dağılımı
  * İlişkiler: Kategori, istatistikler, fiyat geçmişi, karşılaştırmalar
  * 
- * Not: Timestamps yok (statik veri), sadece creation_at kullanılır
+ * Not: Timestamps (created_at, updated_at) pasif, veriler dışarıdan güncellenir.
  */
 class TefasFund extends Model
 {

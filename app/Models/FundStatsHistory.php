@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Fon istatistikleri geçmişi - Fonların tarihsel verisi (fiyat, getiri, yatırımcı sayısı vb)
+ * Fon istatistikleri geçmişi - Fonların tarihsel verisi (fiyat, getiri, yatırımcı sayısı vb.)
  * 
- * Composite Primary Key: code + created_at (Aynı fonın günlük verileri)
+ * Composite Primary Key: code + created_at (Aynı fonun günlük verileri)
  * Alanlar: Fiyat, günlük/aylık/yıllık getiri, yatırımcı sayısı
  * İlişkiler: Fon
  */
@@ -70,7 +70,7 @@ class FundStatsHistory extends Model
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    // Composite primary key için save query'i ayarla
+    // Composite primary key için save sorgusunu ayarla
     protected function setKeysForSaveQuery($query)
     {
         $keys = $this->getKeyName();
@@ -91,7 +91,7 @@ class FundStatsHistory extends Model
      * @param mixed $keyName
      * @return mixed
      */
-    // Primary key değerini elde et
+    // Primary key değerini döndür
     protected function getKeyForSaveQuery($keyName = null)
     {
         if (is_null($keyName)) {

@@ -14,17 +14,17 @@ use App\Http\Controllers\TrendAnalysisController;
 use App\Http\Controllers\TefasTrendCheckingController;
 
 // ===== KİMLİK DOĞRULAMA ROTALARI (PUBLIC) =====
-// Kimlik doğrulama Token'ı olmasa da erişilebilir
+// Kimlik doğrulama Token'ı olmadan da erişilebilir rotalar
 
 // Yeni kullanıcı kaydı
 Route::post('/register', [UserController::class, 'register']);
 // Giriş - API Token döndürür
 Route::post('/login', [UserController::class, 'login']);
 
-// ===== KİMLİK DOĞRULAMA GEREKLİ ROTALAR (PROTECTED) =====
-// Tüm bu rotalar Sanctum API Token gereklidir (Başlıkta: Authorization: Bearer {token})
+// ===== KİMLİK DOĞRULAMA GEREKTİREN ROTALAR (PROTECTED) =====
+// Tüm bu rotalar için Sanctum API Token gereklidir (Header: Authorization: Bearer {token})
 Route::middleware('auth:sanctum')->group(function () {
-    // Authenticated kullanıcının bilgisini getir
+    // Kimliği doğrulanmış kullanıcının bilgilerini getir
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -89,11 +89,11 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Kullanıcının favori listesini getir
     Route::get('/favorites', [FavoriteFundController::class, 'getFavoriteFunds']);
-    // Fonu favorite'e ekle
+    // Fonu favorilere ekle
     Route::post('/favorites/add', [FavoriteFundController::class, 'addFavorite']);
-    // Fonların hangilerinin favorite olduğunu kontrol et
+    // Hangi fonların favorilerde olduğunu kontrol et
     Route::post('/favorites/check', [FavoriteFundController::class, 'checkFavorites']);
-    // Fonu favorite'ten çıkar
+    // Fonu favorilerden çıkar
     Route::delete('/favorites/{fundCode}', [FavoriteFundController::class, 'removeFavorite']);
 });
 

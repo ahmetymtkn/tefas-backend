@@ -11,8 +11,8 @@ class TefasBestCategoryRateController extends Controller
      * Verilen dönem içindeki tüm kategorilerin en yüksek verimlilik oranlarını getir
      * 
      * GET /api/tefas/best-category-rates/period/{periodId}
-     * Sonucu: En son tarihten veriler (orn: bugünün verileri)
-     * @param int $periodId - Dönem ID (1=1 ay, 3=3 ay, 12=1 yıl vb)
+     * Sonucu: En son tarihten veriler (ör: bugünün verileri)
+     * @param int $periodId - Dönem ID (1=1 ay, 3=3 ay, 12=1 yıl vb.)
      * @return JSON - Kategori verimlilik verileri, çekiliş tarihi
      */
     // Verilen dönem için tüm kategorilerin en iyi verimliliğini getir
@@ -30,7 +30,7 @@ class TefasBestCategoryRateController extends Controller
             ], 404);
         }
 
-        // O tarihin kategorilerine ait oranları getir ve düzgn format'ında döndür
+        // O tarihin kategorilerine ait oranları getir ve düzgün formatta döndür
         $data = TefasBestCategoryRate::with('category')
             ->where('period_id', $periodId)
             ->where('fetched_at', $latestDate)

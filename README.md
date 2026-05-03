@@ -457,6 +457,69 @@ Authorization: Bearer YOUR_TOKEN
 
 ---
 
+### 📈 Trend Analizi
+
+#### `GET /api/tefas/trend-analysis`
+
+Tüm fonlar için en güncel trend analiz verilerini (seri yükseliş/düşüş günleri, değişim yüzdesi) getirir.
+
+```http
+GET /api/tefas/trend-analysis HTTP/1.1
+Authorization: Bearer YOUR_TOKEN
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "analysis_date": "2026-05-03",
+  "total_funds": 150,
+  "data": [
+    {
+      "fund_code": "HAK",
+      "fund_name": "Halkbank Yatırım Fonu",
+      "category_id": 2,
+      "category_name": "Hisse Senedi Fonu",
+      "streak_days": 3,
+      "change_percent": 1.25,
+      "last_price": 155.75
+    }
+  ]
+}
+```
+
+---
+
+#### `GET /api/tefas/trend-checks`
+
+Son 30 gün içerisindeki genel yükseliş ve düşüş günü sayısını getirir.
+
+```http
+GET /api/tefas/trend-checks HTTP/1.1
+Authorization: Bearer YOUR_TOKEN
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "analysis_date": "2026-05-03",
+  "total_funds": 150,
+  "data": [
+    {
+      "fund_code": "HAK",
+      "fund_name": "Halkbank Yatırım Fonu",
+      "category_name": "Hisse Senedi Fonu",
+      "up_days_count": 18,
+      "down_days_count": 12,
+      "total_return": 5.45
+    }
+  ]
+}
+```
+
+---
+
 ### ❤️ Favori Yönetimi
 
 #### `GET /api/favorites`
@@ -556,6 +619,24 @@ Authorization: Bearer YOUR_TOKEN
 
 ---
 
+## 🖥️ Frontend Sayfaları (Blade Views)
+
+Proje, sadece bir REST API sunmakla kalmaz; Vite ve TailwindCSS ile derlenmiş Blade şablonlarını içeren bir frontend katmanına da sahiptir. Web arayüzündeki sayfaların işlevleri aşağıdadır:
+
+### 🔐 Kimlik Doğrulama
+- **`/login` (Giriş Sayfası):** Kullanıcıların e-posta ve şifreleriyle oturum açtıkları, güvenli giriş ekranı.
+- **`/register` (Kayıt Sayfası):** Yeni kullanıcıların sisteme kayıt olmak için ad, e-posta ve şifre bilgilerini girdikleri form sayfası.
+
+### 📱 Ana Uygulama (App)
+- **`/` (Analiz & Dashboard):** Sisteme giriş yapıldığında karşılaşılan ana gösterge paneli. Piyasaya genel bakış, trend olan fonlar ve hızlı özet verilerini tek ekranda sunar.
+- **`/funds` (Tüm Fonlar):** Sistemdeki (TEFAS'taki) tüm fonların listelendiği ana katalog. Kategorilere göre filtreleme ve isim/koda göre arama özelliklerini barındırır.
+- **`/funds/{code}` (Fon Detay Sayfası):** Belirli bir fon seçildiğinde açılan, fonun; fiyat hareketlerini, komisyon oranlarını, güncel risk değerini ve 50'den fazla varlık tipiyle portföy dağılım grafiğini gösteren kapsamlı analiz sayfası.
+- **`/top-earners` (En Çok Kazandıranlar):** Çeşitli periyotlara (1 ay, 3 ay, 1 yıl vb.) göre kategorisinin şampiyonu olmuş, en yüksek verimi sağlayan fonların sıralandığı liderlik tablosu (leaderboard).
+- **`/history` (Tarihsel Veriler & Karşılaştırma):** İki veya daha fazla fonun geçmiş performanslarının yan yana kıyaslandığı, tarihsel veriler üzerinden derinlemesine analizlerin yapıldığı sayfa.
+- **`/profile` (Kullanıcı Profili):** Kullanıcının hesap ayarlarını gördüğü, favorilediği fonların listesine eriştiği ve kendi sepetini yönettiği kişisel alan.
+
+---
+
 ## 🗄️ Database Yapısı
 
 ### Veritabanı Tabloları (6 Migration'ı Mevcut)
@@ -573,7 +654,7 @@ Authorization: Bearer YOUR_TOKEN
 
 | Tablo | Açıklama | Durum |
 |-------|----------|-------|
-| `tefas_category` | Fon kategorileri (Hisse, Sabit, vb) | ❌ Gerekli |
+| `tefas_category` | Fon kategorileri (Hisse, Sabit, vb.) | ❌ Gerekli |
 | `tefas_periods` | Dönemler (1m, 3m, 6m, 1y, 2y) | ❌ Gerekli |
 | `tefas_funds` | Fon ana bilgileri | ❌ Gerekli |
 | `fund_stats_history` | İstatistik geçmişi (daily) | ❌ Gerekli |
@@ -581,6 +662,8 @@ Authorization: Bearer YOUR_TOKEN
 | `tefas_best_category_rate` | Kategori verimlilik oranları | ❌ Gerekli |
 | `tefas_best_fund_rate` | Top 9 fon | ❌ Gerekli |
 | `tefas_comparison_history` | Karşılaştırma verileri (JSON) | ❌ Gerekli |
+| `tefas_trend_analysis` | Anlık trend analiz verileri | ❌ Gerekli |
+| `tefas_trend_checking` | Son 30 günlük trend kontrolü | ❌ Gerekli |
 
 ---
 
@@ -678,10 +761,28 @@ Authorization: Bearer YOUR_TOKEN
 
 **tefas_comparison_history:**
 - `id`: BIGINT (PK)
-- `code`: VARCHAR (FK)
+- `fund_code`: VARCHAR (FK)
 - `period_id`: INT (FK)
-- `karsilastirma_verisi`: JSON
+- `comparison_names`: JSON
+- `comparison_values`: JSON
 - `fetched_at`: DATE
+
+**tefas_trend_analysis:**
+- `id`: BIGINT (PK)
+- `fund_code`: VARCHAR (FK)
+- `up_streak`: INT
+- `down_streak`: INT
+- `change_percent`: DECIMAL
+- `last_price`: DECIMAL
+- `analysis_date`: DATE
+
+**tefas_trend_checking:**
+- `id`: BIGINT (PK)
+- `fund_code`: VARCHAR (FK)
+- `up_days_count`: INT
+- `down_days_count`: INT
+- `total_return`: DECIMAL
+- `analysis_date`: DATE
 
 ---
 
@@ -700,6 +801,8 @@ erDiagram
     TEFAS_FUNDS ||--o{ TEFAS_COMPARISON_HISTORY : compares
     TEFAS_FUNDS ||--o{ FUND_STATS_HISTORY : has
     TEFAS_FUNDS ||--o{ TEFAS_FUND_DETAILS : detailed
+    TEFAS_FUNDS ||--o{ TEFAS_TREND_ANALYSIS : trends
+    TEFAS_FUNDS ||--o{ TEFAS_TREND_CHECKING : checks
 ```
 
 ---
