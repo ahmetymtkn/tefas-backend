@@ -10,19 +10,17 @@ class TrendAnalysis extends Model
     
     protected $fillable = [
         'fund_code',
-        'up_streak',
-        'down_streak',
+        'period_days',
         'change_percent',
         'last_price',
         'analysis_date'
     ];
     
     protected $casts = [
-        'analysis_date' => 'date',
+        'analysis_date'  => 'date',
         'change_percent' => 'float',
-        'last_price' => 'float',
-        'up_streak' => 'integer',
-        'down_streak' => 'integer'
+        'last_price'     => 'float',
+        'period_days'    => 'integer',
     ];
     
     public $timestamps = false;

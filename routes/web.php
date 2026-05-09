@@ -20,8 +20,10 @@ Route::view('/register', 'auth.register')->name('register.page');
 // ===== ANA UYGULAMA SAYFALARI =====
 // Giriş yaptıktan sonra erişilebilir sayfalar (Frontend tarafından yönetilir)
 
-// Ana sayfa - Analiz sayfası
-Route::view('/', 'app.analytics')->name('analytics');
+// Analizler
+Route::view('/', 'app.trend-analysis')->name('home');
+Route::view('/trend-analysis', 'app.trend-analysis')->name('trend-analysis');
+Route::view('/trend-checks', 'app.trend-checks')->name('trend-checks');
 // Tüm fonlar
 Route::view('/funds', 'app.funds')->name('funds');
 // Spesifik Fon Detay Sayfası

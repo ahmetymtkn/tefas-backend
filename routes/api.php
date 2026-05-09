@@ -77,13 +77,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // ===== TREND ANALİZİ =====
     
-    // 9. En son trend analiz verileri
+    // 9. Periyot bazlı trend analiz verileri
+    // Desteklenen periyotlar: 2, 3, 5, 7, 14, 21 gün
     // Sonuç: Fon kodu, seri gün sayısı (up/down), yüzde değişim, son fiyat
-    // Sadece en güncel tarihe sahip fonları döndürür
-    Route::get('/tefas/trend-analysis', [TrendAnalysisController::class, 'getLatestTrends']);
+    // Örn: /api/tefas/trend-analysis/7  (7 günlük trend)
+    Route::get('/tefas/trend-analysis/{periodDays}', [TrendAnalysisController::class, 'getLatestTrends']);
 
-    // 10. Son 30 günlük trend kontrol verileri (Yükseliş/Düşüş gün sayısı)
-    Route::get('/tefas/trend-checks', [TefasTrendCheckingController::class, 'getLatestTrendChecks']);
+    // 10. Periyot bazlı trend kontrol verileri (Yükseliş/Düşüş gün sayısı)
+    // Desteklenen periyotlar: 3, 5, 7, 14, 21, 30 gün
+    // Örn: /api/tefas/trend-checks/30  (30 günlük kontrol)
+    Route::get('/tefas/trend-checks/{periodDays}', [TefasTrendCheckingController::class, 'getLatestTrendChecks']);
 
     // ===== FAVORİ FONLAR =====
     

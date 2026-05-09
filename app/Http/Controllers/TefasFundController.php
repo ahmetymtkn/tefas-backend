@@ -3,22 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\TefasFund;
+use App\Models\TefasFundDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TefasFundController extends Controller
 {
     /**
-     * Tüm fonları kategori bilgileriyle birlikte listele
+     * Tüm fonları kategori bilgileri ve güncel fiyatlarıyla birlikte listele
      * 
      * GET /api/tefas/funds
      * Sıralı: Fon koduna göre alfabetik
-     * @return JSON - Fon kodu, adı ve kategori adı
+     * @return JSON - Fon kodu, adı, kategori adı, güncel fiyat
      */
     public function getAllFunds()
     {
-        // Performans için sadece gerekli alanları seçiyoruz.
-        // İlişkili kategori bilgisini yüklüyoruz (Eager Loading).
-        // Veri boyutunu küçültmek ve kategori adını düz bir şekilde dönmek için map'liyoruz.
+        // En son tarihi tek sorguda al
+        $latestDate = TefasFundDetail::max('tarih');
+
+        // Tüm fonları ve en son fiyatlarını tek sorguda çek (N+1 yok)
+        $prices = [];
+        if ($latestDate) {
+            $prices = TefasFundDetail::where('tarih', $latestDate)
+                ->pluck('FIYAT', 'code')
+                ->toArray();
+        }
+
         $data = TefasFund::select('code', 'name', 'category_id')
             ->with(['category:id,name'])
             ->orderBy('code')
@@ -27,6 +37,7 @@ class TefasFundController extends Controller
                 'code'          => $f->code,
                 'name'          => $f->name,
                 'category_name' => $f->category?->name ?? '',
+                'fiyat'         => isset($prices[$f->code]) ? (float) $prices[$f->code] : null,
             ]);
 
         return response()->json(

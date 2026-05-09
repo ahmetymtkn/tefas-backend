@@ -13,10 +13,18 @@ class TefasTrendChecking extends Model
 
     protected $fillable = [
         'fund_code',
+        'period_days',
         'analysis_date',
         'up_days_count',
         'down_days_count',
         'total_return'
+    ];
+
+    protected $casts = [
+        'period_days' => 'integer',
+        'up_days_count' => 'integer',
+        'down_days_count' => 'integer',
+        'total_return' => 'float',
     ];
 
     /**

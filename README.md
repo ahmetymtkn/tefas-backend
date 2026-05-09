@@ -459,12 +459,12 @@ Authorization: Bearer YOUR_TOKEN
 
 ### 📈 Trend Analizi
 
-#### `GET /api/tefas/trend-analysis`
+#### `GET /api/tefas/trend-analysis/{periodDays}`
 
-Tüm fonlar için en güncel trend analiz verilerini (seri yükseliş/düşüş günleri, değişim yüzdesi) getirir.
+Belirtilen periyot (örn: 7) için fonların trend analiz verilerini (değişim yüzdesi, son fiyat) getirir. Yükseliş trendine göre sıralanmıştır.
 
 ```http
-GET /api/tefas/trend-analysis HTTP/1.1
+GET /api/tefas/trend-analysis/7 HTTP/1.1
 Authorization: Bearer YOUR_TOKEN
 ```
 
@@ -472,15 +472,14 @@ Authorization: Bearer YOUR_TOKEN
 ```json
 {
   "success": true,
-  "analysis_date": "2026-05-03",
+  "analysis_date": "2026-05-09",
   "total_funds": 150,
   "data": [
     {
       "fund_code": "HAK",
       "fund_name": "Halkbank Yatırım Fonu",
-      "category_id": 2,
       "category_name": "Hisse Senedi Fonu",
-      "streak_days": 3,
+      "period_days": 7,
       "change_percent": 1.25,
       "last_price": 155.75
     }
@@ -490,12 +489,12 @@ Authorization: Bearer YOUR_TOKEN
 
 ---
 
-#### `GET /api/tefas/trend-checks`
+#### `GET /api/tefas/trend-checks/{periodDays}`
 
-Son 30 gün içerisindeki genel yükseliş ve düşüş günü sayısını getirir.
+Belirtilen periyot (örn: 30 gün) içerisindeki toplam yükseliş/düşüş günü sayısını ve genel verimini getirir.
 
 ```http
-GET /api/tefas/trend-checks HTTP/1.1
+GET /api/tefas/trend-checks/30 HTTP/1.1
 Authorization: Bearer YOUR_TOKEN
 ```
 
@@ -503,13 +502,14 @@ Authorization: Bearer YOUR_TOKEN
 ```json
 {
   "success": true,
-  "analysis_date": "2026-05-03",
+  "analysis_date": "2026-05-09",
   "total_funds": 150,
   "data": [
     {
       "fund_code": "HAK",
       "fund_name": "Halkbank Yatırım Fonu",
       "category_name": "Hisse Senedi Fonu",
+      "period_days": 30,
       "up_days_count": 18,
       "down_days_count": 12,
       "total_return": 5.45
@@ -628,8 +628,9 @@ Proje, sadece bir REST API sunmakla kalmaz; Vite ve TailwindCSS ile derlenmiş B
 - **`/register` (Kayıt Sayfası):** Yeni kullanıcıların sisteme kayıt olmak için ad, e-posta ve şifre bilgilerini girdikleri form sayfası.
 
 ### 📱 Ana Uygulama (App)
-- **`/` (Analiz & Dashboard):** Sisteme giriş yapıldığında karşılaşılan ana gösterge paneli. Piyasaya genel bakış, trend olan fonlar ve hızlı özet verilerini tek ekranda sunar.
-- **`/funds` (Tüm Fonlar):** Sistemdeki (TEFAS'taki) tüm fonların listelendiği ana katalog. Kategorilere göre filtreleme ve isim/koda göre arama özelliklerini barındırır.
+- **`/trend-analysis` (ve `/` Anasayfa):** Sisteme giriş yapıldığında karşılaşılan temel analiz ekranı. Dinamik olarak seçilebilen (2-21 gün) periyotlar boyunca fonların yüzde kaç değer kazandığını, hangi fonların stabil yükseldiğini sıralar.
+- **`/trend-checks` (Periyodik Kontrol):** Seçilen periyot (3-30 gün) içinde fonların toplam kaç gün yükselip kaç gün düştüğünü (Başarı Oranı %) ve net getirisini listeleyen kontrol paneli.
+- **`/funds` (Tüm Fonlar):** Sistemdeki (TEFAS'taki) tüm fonların listelendiği ana katalog. Kategorilere göre filtreleme ve isim/koda göre arama özelliklerini barındırır. N+1 problemi engellenmiş yüksek performanslı yükleme sunar.
 - **`/funds/{code}` (Fon Detay Sayfası):** Belirli bir fon seçildiğinde açılan, fonun; fiyat hareketlerini, komisyon oranlarını, güncel risk değerini ve 50'den fazla varlık tipiyle portföy dağılım grafiğini gösteren kapsamlı analiz sayfası.
 - **`/top-earners` (En Çok Kazandıranlar):** Çeşitli periyotlara (1 ay, 3 ay, 1 yıl vb.) göre kategorisinin şampiyonu olmuş, en yüksek verimi sağlayan fonların sıralandığı liderlik tablosu (leaderboard).
 - **`/history` (Tarihsel Veriler & Karşılaştırma):** İki veya daha fazla fonun geçmiş performanslarının yan yana kıyaslandığı, tarihsel veriler üzerinden derinlemesine analizlerin yapıldığı sayfa.
@@ -768,21 +769,23 @@ Proje, sadece bir REST API sunmakla kalmaz; Vite ve TailwindCSS ile derlenmiş B
 - `fetched_at`: DATE
 
 **tefas_trend_analysis:**
-- `id`: BIGINT (PK)
+- `id`: INT (PK)
 - `fund_code`: VARCHAR (FK)
-- `up_streak`: INT
-- `down_streak`: INT
+- `period_days`: INT (2, 3, 5, 7, 14, 21 vb.)
 - `change_percent`: DECIMAL
 - `last_price`: DECIMAL
 - `analysis_date`: DATE
+- *UNIQUE KEY*: `(fund_code, period_days, analysis_date)`
 
 **tefas_trend_checking:**
-- `id`: BIGINT (PK)
+- `id`: INT (PK)
 - `fund_code`: VARCHAR (FK)
+- `period_days`: INT (3, 5, 7, 14, 21, 30 vb.)
 - `up_days_count`: INT
 - `down_days_count`: INT
 - `total_return`: DECIMAL
 - `analysis_date`: DATE
+- *UNIQUE KEY*: `(fund_code, period_days, analysis_date)`
 
 ---
 
@@ -1099,4 +1102,4 @@ MIT Lisansı
 
 ---
 
-**Last Updated**:  3 Mayıs 2026
+**Last Updated**: 28 Mart 2026
